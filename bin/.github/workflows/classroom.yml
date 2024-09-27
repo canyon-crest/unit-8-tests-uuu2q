@@ -1,0 +1,80 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: 'testSumOfElements '
+      id: testsumofelements
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testSumOfElements '
+        setup-command: mvn compile
+        command: mvn -Dtest=Unit8Test#testSumOfElements test
+        timeout: 3
+        max-score: 15
+    - name: 'testCountOccurrences '
+      id: testcountoccurrences
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testCountOccurrences '
+        setup-command: mvn compile
+        command: mvn -Dtest=Unit8Test#testCountOccurrences test
+        timeout: 3
+        max-score: 15
+    - name: 'testFindMax '
+      id: testfindmax
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testFindMax '
+        setup-command: mvn compile
+        command: mvn -Dtest=Unit8Test#testFindMax test
+        timeout: 3
+        max-score: 15
+    - name: 'testReverseRows '
+      id: testreverserows
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testReverseRows '
+        setup-command: mvn compile
+        command: mvn -Dtest=Unit8Test#testReverseRows test
+        timeout: 3
+        max-score: 15
+    - name: 'testTranspose '
+      id: testtranspose
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testTranspose '
+        setup-command: mvn compile
+        command: mvn -Dtest=Unit8Test#testTranspose test
+        timeout: 3
+        max-score: 20
+    - name: 'testFillWithRandom '
+      id: testfillwithrandom
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testFillWithRandom '
+        setup-command: mvn compile
+        command: mvn -Dtest=Unit8Test#testFillWithRandom test
+        timeout: 3
+        max-score: 20
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTSUMOFELEMENTS_RESULTS: "${{steps.testsumofelements.outputs.result}}"
+        TESTCOUNTOCCURRENCES_RESULTS: "${{steps.testcountoccurrences.outputs.result}}"
+        TESTFINDMAX_RESULTS: "${{steps.testfindmax.outputs.result}}"
+        TESTREVERSEROWS_RESULTS: "${{steps.testreverserows.outputs.result}}"
+        TESTTRANSPOSE_RESULTS: "${{steps.testtranspose.outputs.result}}"
+        TESTFILLWITHRANDOM_RESULTS: "${{steps.testfillwithrandom.outputs.result}}"
+      with:
+        runners: testsumofelements,testcountoccurrences,testfindmax,testreverserows,testtranspose,testfillwithrandom
